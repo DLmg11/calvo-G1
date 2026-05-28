@@ -1,0 +1,46 @@
+app.MapGet("/clientes/{nome}/{idade}/{email}/{cidade}",
+    (string nome,int idade,string email,string cidade) => {
+	if (totalClientes >= clientes.Length)
+	{
+		return Results.BadRequest("Limite de clientes atingido.");
+	}
+	
+	if (string.IsNullOrWhiteSpace(nome))
+	{
+		return Results.BadRequest("O nome é obrigatório.");
+	}
+	
+	if (idade <= 0)
+	{
+		return Results.BadRequest("A idade deve ser maior que zero.");
+	}
+	
+	if (string.IsNullOrWhiteSpace(email))
+	{
+		return Results.BadRequest("O email é obrigatório.");
+	}
+	
+	if (string.IsNullOrWhiteSpace(cidade))
+	{
+		return Results.BadRequest("A cidade é obrigatória.");
+	}
+	
+	Cliente c = new Cliente();
+	
+	c.SetNome(nome);
+	c.SetIdade(idade);
+	c.SetEmail(email);
+	c.SetCidade(cidade);
+	
+	clientes[totalClientes] = c;
+	totalClientes++;
+	
+	return Results.Ok(new
+	    {
+				mensagem="Cliente cadastrado com sucesso.",
+				nome=c.GetNome(),
+				idade=c.GetIdade(),
+				email=c.GetEmail(),
+				cidade=c.GetCidade()
+	    });
+});
